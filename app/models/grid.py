@@ -7,6 +7,7 @@ ELEMENT = 2
 TARGET = 3
 
 class Grid:
+    
     """Represents the 2D grid environment."""
     def __init__(self, width, height):
         self.width = width
@@ -28,15 +29,17 @@ class Grid:
     
     def add_element(self, element):
         """Add an element to the grid."""
-        self.grid[element.y, element.x] = ELEMENT
+        if self.is_playable_position(element.x, element.y):
+            self.grid[element.y, element.x] = ELEMENT
     
     def remove_element(self, element):
         """Remove an element from the grid."""
-        self.grid[element.y, element.x] = EMPTY
+        if self.is_playable_position(element.x, element.y):
+            self.grid[element.y, element.x] = EMPTY
     
     def move_element(self, element, new_x, new_y):
         """Move an element to a new position."""
-        if not self.is_valid_position(new_x, new_y) or self.is_occupied(new_x, new_y):
+        if not self.is_playable_position(new_x, new_y) or self.is_occupied(new_x, new_y):
             return False
         
         self.grid[element.y, element.x] = EMPTY
@@ -48,6 +51,10 @@ class Grid:
     def is_valid_position(self, x, y):
         """Check if a position is within grid boundaries."""
         return 0 <= x < self.width and 0 <= y < self.height
+    
+    def is_playable_position(self, x, y):
+        """Check if a position is within the playable area (not on walls)."""
+        return self.is_valid_position(x, y) and not self.is_wall(x, y)
     
     def is_wall(self, x, y):
         """Check if a position contains a wall."""
@@ -67,12 +74,11 @@ class Grid:
     
     def set_target(self, x, y):
         """Mark a position as a target."""
-        if self.is_valid_position(x, y) and not self.is_wall(x, y):
+        if self.is_playable_position(x, y):
             self.grid[y, x] = TARGET
             return True
         return False
     
-    # In app/models/grid.py, add this method to the Grid class:
     def get_neighbors(self, x, y, topology="vonNeumann"):
         """Get neighboring positions based on topology."""
         neighbors = []
@@ -81,7 +87,7 @@ class Grid:
         if topology == "vonNeumann":
             for dx, dy in [(0, -1), (1, 0), (0, 1), (-1, 0)]:  # Up, Right, Down, Left
                 nx, ny = x + dx, y + dy
-                if self.is_valid_position(nx, ny):
+                if self.is_playable_position(nx, ny):
                     neighbors.append((nx, ny))
         
         # Moore neighborhood (8 directions including diagonals)
@@ -91,7 +97,7 @@ class Grid:
                     if dx == 0 and dy == 0:
                         continue  # Skip the center
                     nx, ny = x + dx, y + dy
-                    if self.is_valid_position(nx, ny):
+                    if self.is_playable_position(nx, ny):
                         neighbors.append((nx, ny))
         
         return neighbors
@@ -106,3 +112,4 @@ class Grid:
                 row += symbols[self.grid[y, x]]
             rows.append(row)
         return "\n".join(rows)
+        
