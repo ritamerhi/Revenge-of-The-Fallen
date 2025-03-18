@@ -20,15 +20,18 @@ class ProgrammableMatterSimulation:
         self.grid.clear_grid()
         self.controller.elements.clear()
         self.controller.target_positions = []
-    
+        
     def initialize_elements(self, num_elements):
         """Initialize the specified number of elements at the bottom of the grid."""
         self.reset()
         
-        # Place elements at the bottom of the grid
+        boundary_size = self.grid.boundary_size if hasattr(self.grid, 'boundary_size') else 1
+        safe_width = self.grid.width - (2 * boundary_size)
+        
+        # Place elements at the bottom of the grid with a safe distance from walls
         for i in range(num_elements):
-            x = 1 + i % (self.grid.width - 2)
-            y = self.grid.height - 2
+            x = boundary_size + (i % safe_width)
+            y = self.grid.height - (boundary_size + 1)  # One row up from the bottom boundary
             self.controller.add_element(i, x, y)
         
         return self.controller.elements
@@ -50,8 +53,7 @@ class ProgrammableMatterSimulation:
             return greedy_pathfind(self.grid, start_x, start_y, goal_x, goal_y, topology)
         else:
             raise ValueError(f"Unknown algorithm: {algorithm}")
-    
-        # In app/controllers/simulation.py, modify the transform method
+# Modified transform method with simplified distributed control
     def transform(self, algorithm="astar", topology="vonNeumann", movement="sequential", control_mode="centralized"):
         """Transform the elements to the target shape."""
         # Timing
@@ -78,60 +80,6 @@ class ProgrammableMatterSimulation:
                 
                 # Temporarily remove the element from the grid for pathfinding
                 self.grid.remove_element(element)
-                                
-                                # Find a path for this element
-                path_result = self.find_path(
-                    element.x, element.y, 
-                    element.target_x, element.target_y,
-                    algorithm, topology
-                )
-
-                # Put the element back
-                self.grid.add_element(element)
-
-                if path_result:
-                    path, nodes_explored = path_result
-                    paths[element.id] = path
-                    total_nodes_explored += nodes_explored
-                    
-                    # Add debug info
-                    print(f"Element {element.id}: Path found with {len(path)} steps")
-                else:
-                    # Add debug info for failed paths
-                    print(f"Element {element.id}: NO PATH FOUND from ({element.x}, {element.y}) to ({element.target_x}, {element.target_y})")
-           
-                
-                # Put the element back
-                self.grid.add_element(element)
-                
-                if path_result:
-                    path, nodes_explored = path_result
-                    paths[element.id] = path
-                    total_nodes_explored += nodes_explored
-                    
-                    # Apply the moves sequentially if movement is sequential
-                    if movement == "sequential":
-                        # Execute the path for this element
-                        print("DEBUG: path =", path)
-
-                        for i in range(1, len(path)):
-                            move = {"agentId": element.id, "from": (element.x, element.y), "to": path[i]}
-                            total_moves.append(move)
-                            self.grid.move_element(element, path[i][0], path[i][1])
-        
-        elif control_mode == "independent":
-            # Each element finds its own path independently
-            # This may result in conflicts, but we'll handle them with a priority system
-            elements_by_id = list(self.controller.elements.values())
-            priority_queue = []
-            
-            # Initialize all elements with their paths
-            for element in elements_by_id:
-                if not element.has_target():
-                    continue
-                
-                # Temporarily remove the element from the grid for pathfinding
-                self.grid.remove_element(element)
                 
                 # Find a path for this element
                 path_result = self.find_path(
@@ -148,72 +96,106 @@ class ProgrammableMatterSimulation:
                     paths[element.id] = path
                     total_nodes_explored += nodes_explored
                     
-                    # Add to priority queue based on path length
-                    priority = len(path)
-                    heapq.heappush(priority_queue, (priority, element.id, 0))  # (priority, element_id, current_step)
-            
-            # Execute moves
-            if movement == "sequential":
-                # One element moves at a time until it reaches its target
-                while priority_queue:
-                    _, element_id, current_step = heapq.heappop(priority_queue)
-                    element = self.controller.elements[element_id]
-                    path = paths[element_id]
+                    # Add debug info
+                    print(f"Element {element.id}: Path found with {len(path)} steps")
                     
-                    # If we've reached the end of the path, we're done with this element
-                    if current_step >= len(path) - 1:
+                    # Apply the moves sequentially if movement is sequential
+                    if movement == "sequential":
+                        # Execute the path for this element
+                        for i in range(1, len(path)):
+                            move = {"agentId": element.id, "from": (element.x, element.y), "to": path[i]}
+                            total_moves.append(move)
+                            self.grid.move_element(element, path[i][0], path[i][1])
+        
+        elif control_mode == "distributed":
+            # Simplified distributed approach where each element makes its own decisions
+            # based on its current position and target
+            max_steps = 100
+            current_step = 0
+            moves_this_round = []
+            all_at_target = False
+            
+            # For tracking elements that have reached their targets
+            reached_targets = set()
+            
+            # Simulate distributed movement until all elements reach targets or max steps reached
+            while current_step < max_steps and not all_at_target:
+                moves_this_round = []
+                
+                # Each element makes a decision independently
+                for element_id, element in self.controller.elements.items():
+                    if not element.has_target() or element_id in reached_targets:
                         continue
                     
-                    # Try to move to the next position
-                    next_x, next_y = path[current_step + 1]
+                    # Check if element has reached its target
+                    if element.x == element.target_x and element.y == element.target_y:
+                        reached_targets.add(element_id)
+                        continue
                     
-                    # Check if the next position is free
-                    if self.grid.is_empty(next_x, next_y):
-                        move = {"agentId": element_id, "from": (element.x, element.y), "to": (next_x, next_y)}
-                        total_moves.append(move)
-                        self.grid.move_element(element, next_x, next_y)
-                        
-                        # Re-add to priority queue for next step
-                        if current_step + 1 < len(path) - 1:
-                            heapq.heappush(priority_queue, (len(path), element_id, current_step + 1))
-                    else:
-                        # If blocked, re-add with same step but lower priority
-                        heapq.heappush(priority_queue, (len(path) + 1, element_id, current_step))
-                        
-                        # In simulation.py transform method, modify the parallel movement section
-            elif movement == "parallel":
-                # For parallel movement, we simulate steps where all elements try to move simultaneously
-                max_steps = max(len(path) for path in paths.values()) if paths else 0
+                    # Get neighboring cells
+                    neighbors = self.grid.get_neighbors(element.x, element.y, topology)
+                    
+                    # Filter neighbors that are not walls or occupied by other elements
+                    valid_neighbors = [(nx, ny) for nx, ny in neighbors 
+                                    if not self.grid.is_wall(nx, ny) and not self.grid.is_element(nx, ny)]
+                    
+                    if not valid_neighbors:
+                        continue  # No valid moves available
+                    
+                    # Simple distributed decision: choose the neighbor that minimizes 
+                    # Manhattan distance to target
+                    best_distance = element.distance_to_target()
+                    best_pos = None
+                    
+                    for nx, ny in valid_neighbors:
+                        # Calculate Manhattan distance from this neighbor to target
+                        distance = abs(nx - element.target_x) + abs(ny - element.target_y)
+                        if distance < best_distance:
+                            best_distance = distance
+                            best_pos = (nx, ny)
+                    
+                    # If a better position is found, plan to move there
+                    if best_pos:
+                        moves_this_round.append((element, best_pos))
                 
-                for step_num in range(1, max_steps):
-                    moves_this_step = []
+                # For parallel movement, resolve conflicts (multiple elements wanting the same cell)
+                if movement == "parallel":
+                    # Track which positions will be occupied
+                    planned_positions = {}
                     
-                    # Record planned moves for this step
-                    for element_id, path in paths.items():
-                        if step_num < len(path):
-                            element = self.controller.elements[element_id]
-                            next_pos = path[step_num]
-                            moves_this_step.append((element, next_pos))
+                    # Sort moves by distance priority (elements closer to targets move first)
+                    moves_this_round.sort(
+                        key=lambda m: abs(m[0].target_x - m[1][0]) + abs(m[0].target_y - m[1][1])
+                    )
                     
-                    # Sort moves by priority (e.g., distance to target, ID, etc.)
-                    moves_this_step.sort(key=lambda m: (m[0].distance_to_target(), m[0].id))
+                    # Allocate moves, giving priority to elements closer to their targets
+                    final_moves = []
+                    for element, pos in moves_this_round:
+                        if pos not in planned_positions:
+                            planned_positions[pos] = element
+                            final_moves.append((element, pos))
                     
-                    # Execute non-conflicting moves
-                    executed_positions = set()
-                    for element, (next_x, next_y) in moves_this_step:
-                        if (next_x, next_y) in executed_positions:
-                            continue  # Skip if another element already moved to this position
-                        
-                        if self.grid.is_empty(next_x, next_y):
-                            move = {
-                                "agentId": element.id, 
-                                "from": (element.x, element.y), 
-                                "to": (next_x, next_y),
-                                "step": step_num  # Add step number for frontend animation
-                            }
-                            total_moves.append(move)
-                            self.grid.move_element(element, next_x, next_y)
-                            executed_positions.add((next_x, next_y))
+                    moves_this_round = final_moves
+                
+                # Execute the moves for this round
+                for element, (next_x, next_y) in moves_this_round:
+                    move = {"agentId": element.id, "from": (element.x, element.y), "to": (next_x, next_y)}
+                    total_moves.append(move)
+                    self.grid.move_element(element, next_x, next_y)
+                    total_nodes_explored += 1  # Count each move as a node exploration
+                
+                # Check if all elements have reached their targets
+                all_at_target = all(
+                    (element.x == element.target_x and element.y == element.target_y) 
+                    for element in self.controller.elements.values() 
+                    if element.has_target()
+                )
+                
+                # If sequential movement and no moves were made this round, break out of the loop
+                if movement == "sequential" and not moves_this_round:
+                    break
+                    
+                current_step += 1
         
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -226,8 +208,6 @@ class ProgrammableMatterSimulation:
             "nodes_explored": total_nodes_explored,
             "success": True
         }
-    
-    
     def get_state(self):
         """Get the current state of the simulation."""
         elements_data = []
