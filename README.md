@@ -94,7 +94,7 @@ git clone https://github.com/farengi/Revenge-of-The-Fallen
 cd Revenge-of-The-Fallen
 ```
 
-2. Create a virtual environment:
+2. Create a virtual environment: (Optional)
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows, use: venv\Scripts\activate
@@ -111,9 +111,7 @@ python run.py
 ```
 
 5. Open your browser and navigate to:
-```
-http://localhost:5000
-```
+http://127.0.0.1:5000/
 
 ## Usage
 
