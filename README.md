@@ -1,7 +1,5 @@
 # Programmable Matter Simulation: Revenge of the Fallen
 
-![Programmable Matter](/static/screenshot.png)
-
 ## Overview
 
 This project implements a simulation of programmable matter, a collection of intelligent agents that can rearrange themselves to form different target shapes. The system simulates the problem as a state-space search problem, where each agent must find a path from its initial position to its target position while avoiding obstacles and other agents.
