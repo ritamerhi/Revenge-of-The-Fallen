@@ -65,6 +65,8 @@ class ProgrammableMatterSimulation:
                     self.controller.add_element(elements_placed, x, y)
                     elements_placed += 1
 
+                
+
             if elements_placed >= num_elements:
                 break  # Stop if all elements are placed
 
@@ -1641,7 +1643,7 @@ class ProgrammableMatterSimulation:
 
             planned = []
             # 2) each element picks its CA move
-            for e in self.controller.elements.values():
+            for e in sorted(self.controller.elements.values(), key=lambda e: e.y):
                 nxt = decide_next_move(e, self.grid, topology)
                 if nxt:
                     planned.append((e, nxt))
