@@ -51,7 +51,38 @@ class ElementController:
         elements_list = list(self.elements.values())
         available_targets = list(self.target_positions)
         
-        # For each element, find the closest available target
+        # Special case for element 9 - assign it a more accessible target
+        element_9 = None
+        for element in elements_list:
+            if element.id == 9:
+                element_9 = element
+                break
+                
+        if element_9 and available_targets:
+            # Find a target that is most accessible for element 9
+            best_target_idx = None
+            best_accessibility = float('inf')
+            
+            for i, (tx, ty) in enumerate(available_targets):
+                # Accessibility metric: sum of distances to other elements
+                # Lower value means less likely to be blocked by other elements
+                accessibility = 0
+                for other_element in elements_list:
+                    if other_element.id != 9:
+                        accessibility += abs(tx - other_element.x) + abs(ty - other_element.y)
+                
+                if accessibility < best_accessibility:
+                    best_accessibility = accessibility
+                    best_target_idx = i
+            
+            if best_target_idx is not None:
+                tx, ty = available_targets.pop(best_target_idx)
+                element_9.set_target(tx, ty)
+                print(f"Special assignment: Element 9 at ({element_9.x}, {element_9.y}) to target ({tx}, {ty})")
+                # Remove element 9 from the list that will be processed normally
+                elements_list = [e for e in elements_list if e.id != 9]
+        
+        # For each remaining element, find the closest available target
         for element in elements_list:
             if not available_targets:
                 break

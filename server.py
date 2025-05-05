@@ -59,34 +59,58 @@ def transform():
         print("TARGET POSITIONS:")
         for i, (tx, ty) in enumerate(targets):
             print(f"  Target {i}: ({tx}, {ty})")
+
+        # If the front-end asked for CA, call the new mode:
+        if algorithm == "cellular":
+            result = simulation.transform(
+                algorithm="cellular",
+                topology=topology,
+                movement=movement,
+                control_mode=control_mode
+            )
+        else:
+            result = simulation.transform(
+                algorithm=algorithm,
+                topology=topology,
+                movement=movement,
+                control_mode=control_mode
+            )
+
         
         # Run the transformation
-        result = simulation.transform(
-            algorithm=algorithm,
-            topology=topology,
-            movement=movement,
-            control_mode=control_mode
-        )
+        # result = simulation.transform(
+        #     algorithm=algorithm,
+        #     topology=topology,
+        #     movement=movement,
+        #     control_mode=control_mode
+        # )
+
         
-        print("TRANSFORMATION RESULT:")
-        print(f"  Moves: {len(result['moves'])}")
-        print(f"  Nodes explored: {result['nodes_explored']}")
         
-        # Detailed move logging
-        print("MOVES (Backend format):")
-        for i, move in enumerate(result['moves']):
-            print(f"  Move {i}: Agent {move['agentId']} from {move['from']} to {move['to']}")
+        if not result["moves"]:
+            print("WARNING: No moves were generated. The transformation may have failed.")
+        else:
+            print("TRANSFORMATION RESULT:")
+            print(f"  Moves: {len(result['moves'])}")
+            print(f"  Nodes explored: {result['nodes_explored']}")
+            
+            # Detailed move logging
+            print("MOVES (Backend format):")
+            for i, move in enumerate(result['moves']):
+                print(f"  Move {i}: Agent {move['agentId']} from {move['from']} to {move['to']}")
         
-    
         # Format the moves for the frontend with explicit coordinate handling
         frontend_moves = []
         for move in result['moves']:
+            # Create adjusted coordinates with both X and Y fixes
+            # Move left by 1 column and up by 1 row
             frontend_move = {
                 'agentId': move['agentId'],
-                'from': {'x': move['from'][0], 'y': move['from'][1]},  # Keep x,y order
-                'to': {'x': move['to'][0], 'y': move['to'][1]}        # Keep x,y order
+                'from': {'x': move['from'][0] - 1, 'y': move['from'][1] - 1},  # Subtract 1 from both x and y
+                'to': {'x': move['to'][0] - 1, 'y': move['to'][1] - 1}         # Subtract 1 from both x and y
             }
             frontend_moves.append(frontend_move)
+        
         # Log frontend moves
         print("MOVES (Frontend format):")
         for i, move in enumerate(frontend_moves):
@@ -95,15 +119,20 @@ def transform():
         # Final element positions
         print("FINAL ELEMENT POSITIONS:")
         for eid, element in simulation.controller.elements.items():
-            print(f"  Element {eid}: ({element.x}, {element.y})")
+            if hasattr(element, 'target_x') and element.target_x is not None:
+                at_target = element.x == element.target_x and element.y == element.target_y
+                status = "AT TARGET" if at_target else "NOT AT TARGET"
+                print(f"  Element {eid}: ({element.x}, {element.y}) -> Target: ({element.target_x}, {element.target_y}) {status}")
+            else:
+                print(f"  Element {eid}: ({element.x}, {element.y}) -> No target assigned")
         
         # Prepare the response
         response = {
-            'success': result['success'],
+            'success': True if frontend_moves else False,
             'moves': frontend_moves,
             'time': result['time'],
             'nodes': result['nodes_explored'],
-            'message': 'Transformation completed successfully'
+            'message': 'Transformation completed successfully' if frontend_moves else 'No valid moves found'
         }
         
         return jsonify(response)
@@ -120,6 +149,7 @@ def transform():
             'nodes': 0,
             'message': f'Error during transformation: {str(e)}'
         }), 500  # Return 500 status code for server errors
+ 
     
 @app.route('/api/reset', methods=['POST'])
 def reset():

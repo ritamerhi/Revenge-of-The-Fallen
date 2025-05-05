@@ -29,7 +29,7 @@ body {
     margin: 0;
     padding: 0;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L50 0 L50 50 L0 50 Z' fill='%23111111'/%3E%3Cpath d='M50 0 L100 0 L100 50 L50 50 Z' fill='%23121212'/%3E%3Cpath d='M0 50 L50 50 L50 100 L0 100 Z' fill='%23121212'/%3E%3Cpath d='M50 50 L100 50 L100 100 L50 100 Z' fill='%23111111'/%3E%3C/svg%3E"),
-        linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(20,20,20,1) 100%);
+        linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(20, 20, 20, 1) 100%);
     overflow-x: hidden;
     position: relative;
 }
@@ -59,11 +59,30 @@ body {
 }
 
 @keyframes logoReveal {
-    0% { transform: scale(0.8); opacity: 0; }
-    20% { transform: scale(1.1); opacity: 1; }
-    30% { transform: scale(1); opacity: 1; }
-    80% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(1.5); opacity: 0; }
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    20% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    30% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    80% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
 }
 
 /* Main content container */
@@ -93,13 +112,14 @@ header {
     display: inline-block;
 }
 
-.title::before, .title::after {
+.title::before,
+.title::after {
     content: '';
     position: absolute;
     top: 50%;
     width: 120px;
     height: 3px;
-    background: linear-gradient(90deg, rgba(0,184,255,0) 0%, rgba(0,184,255,1) 50%, rgba(0,184,255,0) 100%);
+    background: linear-gradient(90deg, rgba(0, 184, 255, 0) 0%, rgba(0, 184, 255, 1) 50%, rgba(0, 184, 255, 0) 100%);
 }
 
 .title::before {
@@ -233,10 +253,8 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(
-        rgba(0, 184, 255, 0.03) 50%,
-        rgba(0, 0, 0, 0) 50%
-    );
+    background-image: linear-gradient(rgba(0, 184, 255, 0.03) 50%,
+            rgba(0, 0, 0, 0) 50%);
     background-size: 100% 4px;
     pointer-events: none;
     z-index: 10;
@@ -252,7 +270,7 @@ header {
     border-radius: 5px;
     position: relative;
     border: 1px solid rgba(50, 50, 50, 0.8);
-    box-shadow: 
+    box-shadow:
         0 0 30px rgba(0, 0, 0, 0.8),
         inset 0 0 15px rgba(0, 184, 255, 0.1);
 }
@@ -329,20 +347,20 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.2) 100%);
     pointer-events: none;
 }
 
 .matter-element.neutral {
     background: linear-gradient(135deg, #555, #333);
-    box-shadow: 
+    box-shadow:
         0 2px 5px rgba(0, 0, 0, 0.5),
         inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
 .matter-element.autobot {
     background: linear-gradient(135deg, var(--autobot-red), #7a0a1e);
-    box-shadow: 
+    box-shadow:
         0 2px 5px rgba(0, 0, 0, 0.5),
         inset 0 1px 1px rgba(255, 255, 255, 0.2),
         0 0 8px rgba(196, 18, 48, 0.4);
@@ -350,7 +368,7 @@ header {
 
 .matter-element.decepticon {
     background: linear-gradient(135deg, var(--decepticon-purple), #3a0c96);
-    box-shadow: 
+    box-shadow:
         0 2px 5px rgba(0, 0, 0, 0.5),
         inset 0 1px 1px rgba(255, 255, 255, 0.2),
         0 0 8px rgba(94, 23, 235, 0.4);
@@ -361,8 +379,13 @@ header {
 }
 
 @keyframes elementPulse {
-    0% { box-shadow: 0 0 5px var(--energon-glow); }
-    100% { box-shadow: 0 0 15px var(--energon-glow), 0 0 5px rgba(255, 255, 255, 0.5); }
+    0% {
+        box-shadow: 0 0 5px var(--energon-glow);
+    }
+
+    100% {
+        box-shadow: 0 0 15px var(--energon-glow), 0 0 5px rgba(255, 255, 255, 0.5);
+    }
 }
 
 .matter-element.autobot.selected {
@@ -370,8 +393,13 @@ header {
 }
 
 @keyframes autobotPulse {
-    0% { box-shadow: 0 0 5px rgba(196, 18, 48, 0.4); }
-    100% { box-shadow: 0 0 15px rgba(196, 18, 48, 0.7), 0 0 5px rgba(255, 255, 255, 0.5); }
+    0% {
+        box-shadow: 0 0 5px rgba(196, 18, 48, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 0 15px rgba(196, 18, 48, 0.7), 0 0 5px rgba(255, 255, 255, 0.5);
+    }
 }
 
 .matter-element.decepticon.selected {
@@ -379,8 +407,13 @@ header {
 }
 
 @keyframes decepticonPulse {
-    0% { box-shadow: 0 0 5px rgba(94, 23, 235, 0.4); }
-    100% { box-shadow: 0 0 15px rgba(94, 23, 235, 0.7), 0 0 5px rgba(255, 255, 255, 0.5); }
+    0% {
+        box-shadow: 0 0 5px rgba(94, 23, 235, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 0 15px rgba(94, 23, 235, 0.7), 0 0 5px rgba(255, 255, 255, 0.5);
+    }
 }
 
 .transform-animation {
@@ -388,15 +421,50 @@ header {
 }
 
 @keyframes transform-sequence {
-    0% { transform: scale(1); filter: brightness(1); }
-    10% { transform: scale(0.9) rotate(5deg); filter: brightness(1.2); }
-    20% { transform: scale(0.8) rotate(-5deg); filter: brightness(1.5); }
-    30% { transform: scale(1.1) rotate(10deg); filter: brightness(1.8); }
-    40% { transform: scale(0.9) rotate(-10deg); filter: brightness(2); }
-    50% { transform: scale(1.1) rotate(5deg); filter: brightness(1.8); }
-    60% { transform: scale(0.9) rotate(-5deg); filter: brightness(1.5); }
-    80% { transform: scale(1.05) rotate(0deg); filter: brightness(1.2); }
-    100% { transform: scale(1); filter: brightness(1); }
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    10% {
+        transform: scale(0.9) rotate(5deg);
+        filter: brightness(1.2);
+    }
+
+    20% {
+        transform: scale(0.8) rotate(-5deg);
+        filter: brightness(1.5);
+    }
+
+    30% {
+        transform: scale(1.1) rotate(10deg);
+        filter: brightness(1.8);
+    }
+
+    40% {
+        transform: scale(0.9) rotate(-10deg);
+        filter: brightness(2);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        filter: brightness(1.8);
+    }
+
+    60% {
+        transform: scale(0.9) rotate(-5deg);
+        filter: brightness(1.5);
+    }
+
+    80% {
+        transform: scale(1.05) rotate(0deg);
+        filter: brightness(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
 }
 
 /* Target shapes */
@@ -443,10 +511,12 @@ header {
     letter-spacing: 1px;
     color: var(--energon-blue);
 }
+
 .target-cell {
     background: rgba(0, 184, 255, 0.1);
     box-shadow: inset 0 0 8px rgba(0, 184, 255, 0.3);
 }
+
 .shape-preview {
     height: 60px;
     display: flex;
@@ -513,12 +583,10 @@ header {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.1), 
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent);
     transition: all 0.5s;
 }
 
@@ -752,13 +820,13 @@ header {
     transition: all 0.3s;
 }
 
-.toggle-switch input:checked + label .toggle-switch-inner {
+.toggle-switch input:checked+label .toggle-switch-inner {
     left: 39px;
     background-color: var(--energon-blue);
     box-shadow: 0 0 8px var(--energon-glow);
 }
 
-.toggle-switch input:checked + label {
+.toggle-switch input:checked+label {
     background-color: #1a3d4d;
 }
 
@@ -775,11 +843,11 @@ header {
     pointer-events: none;
 }
 
-.toggle-switch input:checked + label .on {
+.toggle-switch input:checked+label .on {
     color: var(--energon-blue);
 }
 
-.toggle-switch input:not(:checked) + label .off {
+.toggle-switch input:not(:checked)+label .off {
     color: #999;
 }
 
@@ -892,18 +960,21 @@ header {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.4) 50%,
-        transparent 100%
-    );
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 100%);
     animation: progressShine 2s infinite linear;
 }
 
 @keyframes progressShine {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 /* Console output */
@@ -967,4 +1038,81 @@ header {
     padding: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 
+}
+
+/* Add this to your styles.css */
+.matter-element.moving {
+    animation: highlight-move 0.5s ease;
+}
+
+@keyframes highlight-move {
+    0% {
+        transform: scale(0.8);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Add these styles to your existing CSS file */
+
+.shape-warning {
+    margin: 10px 0;
+    padding: 8px 12px;
+    background: rgba(255, 153, 0, 0.1);
+    border-left: 3px solid #ff9900;
+    font-size: 0.75rem;
+    color: #eee;
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    align-items: center;
+    animation: warningFadeIn 0.3s ease-out;
+}
+
+@keyframes warningFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.warning-icon {
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.adjust-agents-btn {
+    margin-left: 8px;
+    padding: 3px 8px;
+    background: linear-gradient(to bottom, #ff9900, #cc7700);
+    border: none;
+    border-radius: 3px;
+    color: #000;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+.adjust-agents-btn:hover {
+    background: linear-gradient(to bottom, #ffaa22, #dd8800);
+    transform: translateY(-1px);
+}
+
+.adjust-agents-btn:active {
+    transform: translateY(1px);
 }

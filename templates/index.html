@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
     <!-- Intro screen with logo -->
     <div class="intro-container" id="intro">
@@ -18,16 +20,19 @@
                     <stop offset="100%" style="stop-color:#5e17eb;stop-opacity:1" />
                 </linearGradient>
                 <filter id="glow">
-                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
                     <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
                     </feMerge>
                 </filter>
             </defs>
-            <text x="300" y="80" font-family="Orbitron, sans-serif" font-size="40" font-weight="900" text-anchor="middle" fill="url(#logoGradient)" filter="url(#glow)">TRANSFORMERS</text>
-            <text x="300" y="130" font-family="Orbitron, sans-serif" font-size="24" font-weight="700" text-anchor="middle" fill="#eee">REVENGE OF THE FALLEN</text>
-            <text x="300" y="170" font-family="Orbitron, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#00b8ff">PROGRAMMABLE MATTER</text>
+            <text x="300" y="80" font-family="Orbitron, sans-serif" font-size="40" font-weight="900"
+                text-anchor="middle" fill="url(#logoGradient)" filter="url(#glow)">TRANSFORMERS</text>
+            <text x="300" y="130" font-family="Orbitron, sans-serif" font-size="24" font-weight="700"
+                text-anchor="middle" fill="#eee">REVENGE OF THE FALLEN</text>
+            <text x="300" y="170" font-family="Orbitron, sans-serif" font-size="16" font-weight="400"
+                text-anchor="middle" fill="#00b8ff">PROGRAMMABLE MATTER</text>
         </svg>
     </div>
 
@@ -41,15 +46,18 @@
         <div class="faction-selector">
             <div class="faction-choice autobot active" id="faction-autobot" onclick="selectFaction('autobot')">
                 <svg class="faction-icon" viewBox="0 0 100 100" width="30" height="30">
-                    <path d="M50 10 L70 30 L80 70 L50 90 L20 70 L30 30 Z" fill="none" stroke="#c41230" stroke-width="3" />
+                    <path d="M50 10 L70 30 L80 70 L50 90 L20 70 L30 30 Z" fill="none" stroke="#c41230"
+                        stroke-width="3" />
                     <circle cx="50" cy="50" r="15" fill="none" stroke="#c41230" stroke-width="3" />
                 </svg>
                 <span class="faction-name">Autobots</span>
             </div>
             <div class="faction-choice decepticon" id="faction-decepticon" onclick="selectFaction('decepticon')">
                 <svg class="faction-icon" viewBox="0 0 100 100" width="30" height="30">
-                    <path d="M20 20 L50 10 L80 20 L80 50 L50 90 L20 50 Z" fill="none" stroke="#5e17eb" stroke-width="3" />
-                    <path d="M35 40 L50 30 L65 40 L65 60 L50 70 L35 60 Z" fill="none" stroke="#5e17eb" stroke-width="3" />
+                    <path d="M20 20 L50 10 L80 20 L80 50 L50 90 L20 50 Z" fill="none" stroke="#5e17eb"
+                        stroke-width="3" />
+                    <path d="M35 40 L50 30 L65 40 L65 60 L50 70 L35 60 Z" fill="none" stroke="#5e17eb"
+                        stroke-width="3" />
                 </svg>
                 <span class="faction-name">Decepticons</span>
             </div>
@@ -77,8 +85,8 @@
                     </div>
                     <div class="target-shape" id="shape-triangle" onclick="selectTargetShape('triangle')">
                         <div class="shape-preview">
-                            <svg width="60" height="60" viewBox="0 0 100 100">
-                                <polygon points="50,10 90,80 10,80" stroke="#00b8ff" stroke-width="2" fill="none" />
+                            <svg width="50" height="60" viewBox="0 0 100 100">
+                                <polygon points="50,10 90,80 10,80" stroke="#00b8ff" stroke-width="2.1" fill="none" />
                             </svg>
                         </div>
                         <h3>Triangle</h3>
@@ -86,7 +94,8 @@
                     <div class="target-shape active" id="shape-square" onclick="selectTargetShape('square')">
                         <div class="shape-preview">
                             <svg width="60" height="60" viewBox="0 0 100 100">
-                                <rect x="20" y="20" width="60" height="60" stroke="#00b8ff" stroke-width="2" fill="none" />
+                                <rect x="20" y="20" width="60" height="60" stroke="#00b8ff" stroke-width="2"
+                                    fill="none" />
                             </svg>
                         </div>
                         <h3>Square</h3>
@@ -94,7 +103,9 @@
                     <div class="target-shape" id="shape-heart" onclick="selectTargetShape('heart')">
                         <div class="shape-preview">
                             <svg width="60" height="60" viewBox="0 0 100 100">
-                                <path d="M50,30 C35,10 10,20 10,40 C10,60 25,65 50,90 C75,65 90,60 90,40 C90,20 65,10 50,30 Z" stroke="#00b8ff" stroke-width="2" fill="none" />
+                                <path
+                                    d="M50,30 C35,10 10,20 10,40 C10,60 25,65 50,90 C75,65 90,60 90,40 C90,20 65,10 50,30 Z"
+                                    stroke="#00b8ff" stroke-width="2" fill="none" />
                             </svg>
                         </div>
                         <h3>Heart</h3>
@@ -114,7 +125,9 @@
                         </button>
                         <button class="button autobot" id="btn-reset" onclick="resetGrid()">
                             <svg class="button-icon" viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-8 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="#c41230" />
+                                <path
+                                    d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-8 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                                    fill="#c41230" />
                             </svg>
                             Reset
                         </button>
@@ -138,9 +151,13 @@
                                 <input type="radio" name="algorithm" id="algo-greedy" value="greedy">
                                 <label for="algo-greedy">Greedy</label>
                             </div>
+                            <div class="radio-option">
+                                <input type="radio" name="algorithm" id="algo-cellular" value="cellular">
+                                <label for="algo-cellular">Cellular Automata</label>
+                            </div>
                         </div>
                     </div>
-                    
+
                     <div class="settings-group">
                         <div class="settings-title">Topology</div>
                         <div class="radio-group">
@@ -154,7 +171,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="settings-group">
                         <div class="settings-title">Movement</div>
                         <div class="radio-group">
@@ -168,41 +185,27 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- New settings for number of agents and collision -->
+
+                    <div class="settings-group">
+                        <div class="settings-title">Control Mode</div>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="control-mode" id="control-centralized" value="centralized"
+                                    checked>
+                                <label for="control-centralized">Centralized</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="control-mode" id="control-independent" value="independent">
+                                <label for="control-independent">Distributed</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="settings-group">
                         <div class="settings-title">Agents</div>
                         <div class="slider-container">
                             <input type="range" min="1" max="20" value="8" class="slider" id="agents-slider">
                             <div class="slider-value">Agents: <span id="agents-count">8</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="settings-group">
-                        <div class="settings-title">Control Mode</div>
-                        <div class="radio-group">
-                            <div class="radio-option">
-                                <input type="radio" name="control-mode" id="control-centralized" value="centralized" checked>
-                                <label for="control-centralized">Centralized</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" name="control-mode" id="control-independent" value="independent">
-                                <label for="control-independent">Independent</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="settings-group">
-                        <div class="settings-title">Collision</div>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="collision-toggle" checked>
-                            <label for="collision-toggle">
-                                <div class="toggle-switch-inner"></div>
-                                <div class="toggle-switch-text">
-                                    <span class="on">OFF</span>
-                                    <span class="off">ON</span>
-                                </div>
-                            </label>
                         </div>
                     </div>
                 </div>
@@ -223,7 +226,7 @@
                             <div class="metric-label">Nodes</div>
                         </div>
                     </div>
-                    
+
                     <div class="progress-container">
                         <div class="progress-label">
                             <div class="progress-title">Completion</div>
@@ -249,11 +252,13 @@
 
         <!-- Movie quote -->
         <div class="movie-quote">
-            "There's more to them than meets the eye. Autobots and Decepticons. Like us, they're divided by faction and energon."
+            "There's more to them than meets the eye. Autobots and Decepticons. Like us, they're divided by faction and
+            energon."
             <div class="quote-author">— Sam Witwicky</div>
         </div>
     </div>
 
     <script src="/static/script.js"></script>
 </body>
+
 </html>
